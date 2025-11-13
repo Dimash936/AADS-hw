@@ -90,7 +90,7 @@ function getPossibleMoves(piece) {
     let moves = [];
     // For each rotation of the piece
     for (let dir = 0; dir < 4; dir++) {
-        for (let x = 0; x < nx; x++) {
+        for (let x = -5; x < nx; x++) {
             let pieceNew = copyPiece(piece);
             pieceNew.dir = dir;
             if(occupied(pieceNew.type, x, 0, pieceNew.dir)) continue;
@@ -109,7 +109,7 @@ function getPossibleMovesOnBoard(piece, board) {
     let moves = [];
 
     for (let dir = 0; dir < 4; dir++) {
-        for (let x = 0; x < nx; x++) {
+        for (let x = -5; x < nx; x++) {
 
             let pieceNew = copyPiece(piece);
             pieceNew.dir = dir;

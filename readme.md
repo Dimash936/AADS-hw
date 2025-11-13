@@ -38,7 +38,7 @@
     
     and changing line with for lopp to 
 
-    `for (let x = 0; x < nx; x++)`
+    `for (let x = -5; x < nx; x++)`
 
     resolved problem
 - All possible moves stored incorrectly
@@ -127,10 +127,10 @@
     ```
 - **Final heuristic**:  is `-0.51 * aggregateHeight + completeLines * 0.76 - 0.35 * holes
             - 0.18 * bumpiness - wells * 0.3 - 0.23 * maxH`
-- I've played several times and average score is somewhere between $3000$ and $10000$
+- I've played several times and average score is somewhere between $30000$ and $40000$
 
 ### Beam search
 - As most of functions used global state of game `blocks` i had to implement `onBoard` functions, like `getDropPositionOnBoard`, `occupiedOnBoard`, `getPossibleMovesOnBoard`. They almost do same as original versions but use given board instead.
 
 - Then implemented beam search algorithm with `depth = 25` and `width = 10`. 
-- Now average score is much higher, consistently exceeding $15,000$ points
+- This algorithm works much better, after clearing $500+$ lines, maximum height did not even exceeded $7$ rows
