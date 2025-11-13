@@ -149,49 +149,7 @@ function selectBestMove(piece, board) {
     });
     return bestMove;
 }
-function beamSearch(piece, nextPiece, beamWidth = 5, depth = 2) {
-    let bestMove = null;
-    let bestScore = -Infinity;
-    
-    // Get all possible moves for current piece on current board
-    let currentMoves = getPossibleMoves(piece);
-    
-    // If we're at depth 1, just use regular heuristic
-    if (depth === 1) {
-        return selectBestMove(piece);
-    }
-    
-    // For each current move, evaluate with next piece
-    for (let move of currentMoves) {
-        let currentScore = evaluateBoard(move.board);
-        
-        // If we have depth > 1, consider next piece
-        if (depth > 1 && nextPiece) {
-            let nextMoves = getPossibleMoves(nextPiece, move.board);
-            
-            if (nextMoves.length > 0) {
-                // Take best move for next piece
-                let bestNextScore = -Infinity;
-                for (let nextMove of nextMoves) {
-                    let nextScore = evaluateBoard(nextMove.board);
-                    if (nextScore > bestNextScore) {
-                        bestNextScore = nextScore;
-                    }
-                }
-                
-                // Add the best next move score to current score
-                currentScore += bestNextScore * 0.7; // Discount factor for future moves
-            }
-        }
-        
-        if (currentScore > bestScore) {
-            bestScore = currentScore;
-            bestMove = move;
-        }
-    }
-    
-    return bestMove || selectBestMove(piece); // Fallback to simple agent
-}
+
 // Function to get the drop position of the piece
 function getDropPosition(piece, x) {
     let y = 0;
@@ -207,4 +165,48 @@ function getDropPositionOnBoard(piece, x, board) {
         y++;
     }
     return y;
+}
+function beamSearch(piece, next, depth = 25, beamWidth = 10) {
+    board = copyBlocks(blocks);
+    let frontier = [];
+    let firstMoves = getPossibleMovesOnBoard(piece, board);
+    for (let mv of firstMoves) {
+        frontier.push({
+            board: mv.board,
+            score: evaluateBoard(mv.board),
+            firstMove: mv
+        });
+    }
+
+    frontier.sort((a,b) => b.score - a.score);
+    frontier = frontier.slice(0, beamWidth);
+
+    for (let lvl = 1; lvl < depth; lvl++) {
+
+        let nextFrontier = [];
+
+        for (let state of frontier) {
+
+            let np = randomPiece();
+            if(lvl == 1) np = next;
+
+            let moves = getPossibleMovesOnBoard(np, state.board);
+
+            for (let mv of moves) {
+                nextFrontier.push({
+                    board: mv.board,
+                    score: state.score + evaluateBoard(mv.board),
+                    firstMove: state.firstMove
+                });
+            }
+        }
+
+        if (nextFrontier.length === 0) break;
+
+        nextFrontier.sort((a,b) => b.score - a.score);
+        frontier = nextFrontier.slice(0, beamWidth);
+    }
+
+    frontier.sort((a,b) => b.score - a.score);
+    return frontier[0].firstMove;
 }

@@ -116,9 +116,9 @@
     }
 
     function occupiedOnBoard(type, x, y, dir, board) {
-        let result = false;
-        eachblock(type, x, y, dir, (xx, yy) => {
-            if (xx < 0 || xx >= nx || yy >= ny || (yy >= 0 && board[xx][yy]))
+        var result = false
+        eachblock(type, x, y, dir, function(x, y) {
+            if ((x < 0) || (x >= nx) || (y < 0) || (y >= ny) || board[x][y])
                 result = true;
         });
         return result;
