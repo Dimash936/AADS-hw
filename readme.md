@@ -106,7 +106,7 @@
     So, lets for each `k` consecutive lines will be deleted add `(k - 1) * 0.5` to `completeLines`
 - The higher the hole, the worse it is so lets add additional penalty for them, but so that its influence is not so great try adding with coeficient $0.1$
 
-    So for whole at height $(y)$
+    So for hole at height $y$
 
     `holes += 1 + (ny - y) * 0.1;`
 
